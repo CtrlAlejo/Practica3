@@ -5,7 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         auxiliar.cpp \
+        funciones.cpp \
         main.cpp
 
 HEADERS += \
-    auxiliar.h
+    auxiliar.h \
+    funciones.h

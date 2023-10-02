@@ -6,13 +6,8 @@ using namespace std;
 
 int main()
 {
-    //create_file("prueba.txt");
-    //string info = "AbCd";
-    //write_file("prueba.txt", info);
-
-    string file = read_file("prueba.txt");
-    cout << file << endl;
-
-    cout <<endl << string_a_binario(file) <<endl;
+    string cadena;
+    cadena = leer_archivo("prueba.txt");
+    cout << cadena;
     return 0;
 }
