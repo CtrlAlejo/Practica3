@@ -6,8 +6,6 @@ using namespace std;
 
 int main()
 {
-    string cadena;
-    cadena = leer_archivo("prueba.txt");
-    cout << cadena;
+    cadena_a_binario();
     return 0;
 }

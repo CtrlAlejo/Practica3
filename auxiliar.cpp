@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <string>
 #include "auxiliar.h"
 using namespace std;
@@ -8,34 +9,38 @@ void crear_archivo(string name){ //Crea un archivo
     archivo.close();
 }
 
-void write_file(string name, string info){ //Escribe informacion en un archivo
+void escritura_de_archivo(string name, string info){ //Escribe informacion en un archivo
     fstream file;
     file.open(name,ios::out);
     file << info;
     file.close();
 }
 
-string read_file(string name){ //Lee un archivo y retorna su informacion en un string
-    unsigned long long tam;
-    fstream file;
-    string data, data2;
-    file.open(name,ios::in | ios::ate | ios::binary);
+int char_a_decimal(char letra){
+    int decimal = 0;
+    decimal = static_cast<int>(letra);
+    return decimal;
+}
 
-    if(file.is_open()){
-        tam = file.tellg();
-        file.seekg(tam-1);
-        for(unsigned long long i=0;i<tam;i++){
-            data.push_back(file.get());
-            file.seekg(file.tellg()-2);
-        }
+char* decimal_a_binario_(int decimal){
+    char *resultado = new char[8], *resultado_f = new char[8]; int bit, cont = 0, cant;
+    while (decimal > 0) {
+        bit = decimal % 2;
+        resultado[cont++] = bit_a_numero(bit);
+        decimal /= 2;
     }
-    tam -=1;
-    for(unsigned long long i = 0; i <= tam; i++){
-        data2 += data[tam-i];
+    resultado[cont] = '\0';
+    cont = 0;
+    cant = cantidad_de_caracteres(resultado);
+    while (cont < (8 - cant)){
+        resultado_f[cont++] = '0';
     }
-
-    file.close();
-    return data2;
+    for (int i = cont, j = 0; i <= cant; i++, j++){
+        resultado_f[i] = resultado[j];
+    }
+    resultado_f[++cant] = '\0';
+    delete [] resultado;
+    return resultado_f;
 }
 
 string decimal_a_binario(int decimal) { //Convierte un decimal a su correspondiente en binario con 8 bits
@@ -63,7 +68,7 @@ string string_a_binario(string cadena){ //Convierte un string a binario
 
 char bit_a_numero(int bit){
     char bits[2] = {'0','1'}, caracter;
-    if (bit >= 0) {
+    {
         caracter = bits[bit];
     }
     return caracter;
