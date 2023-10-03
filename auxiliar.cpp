@@ -23,20 +23,21 @@ int char_a_decimal(char letra){
 }
 
 char* decimal_a_binario_(int decimal){
-    char *resultado = new char[8], *resultado_f = new char[8]; int bit, cont = 0, cant;
+    char *resultado = new char[8], *resultado_f = new char[8]; int bit, cont = 0, cont2 = 0, cant;
     while (decimal > 0) {
         bit = decimal % 2;
         resultado[cont++] = bit_a_numero(bit);
         decimal /= 2;
     }
     resultado[cont] = '\0';
+    cont2 = cont;
     cont = 0;
     cant = cantidad_de_caracteres(resultado);
     while (cont < (8 - cant)){
         resultado_f[cont++] = '0';
     }
-    for (int i = cont, j = 0; i <= cant; i++, j++){
-        resultado_f[i] = resultado[j];
+    for (int n = cont, m = 0; n <= cont2; n++, m++){ //Se voltea el arreglo de caracteres
+        resultado_f[n] = resultado[(cont2 - 1) - m];
     }
     resultado_f[++cant] = '\0';
     delete [] resultado;
