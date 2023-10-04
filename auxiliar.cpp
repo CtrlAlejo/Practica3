@@ -99,3 +99,75 @@ string leer_archivo(string nombre){
     archivo.close();
     return contenido;
 }
+
+int unos_y_ceros(char* bloque, int semilla, int &ceros){
+    int unos = 0;
+    for (int i = 0; i < semilla; i++){
+        if (bloque[i] == '1'){
+            unos++;
+        } else if (bloque[i] == '0'){
+            ceros++;
+        }
+    }
+    return unos;
+}
+
+void generacion_de_bloque(char* bloque, int semilla, char* cadena, int &cont){
+    for (int i = 0; i < semilla; i++){
+        bloque[i] = cadena[cont++];
+    }
+    bloque[cont] = '\0';
+}
+
+void codificacion1_1(char* cadena, char* bloque, int semilla, int &guia){
+    for (int j = 0; j < semilla; j++){
+        if (bloque[j] == '0'){
+            cadena[++guia] = '1';
+        } else if (bloque[j] == '1') {
+            cadena[++guia] = '0';
+        }
+    }
+}
+
+void codificacion1_2(char* cadena, char* bloque, int semilla, int &guia){
+    for (int i = 0, j = 1; i < semilla; i++, j++){
+        if (j % 3 == 0){
+            if (bloque[i] == '1'){
+                cadena[++guia] = '0';
+            } else if (bloque[i] == '0') {
+                cadena[++guia] = '1';
+            }
+        } else {
+            cadena[++guia] = bloque[i];
+        }
+    }
+}
+
+void codificacion1_3(char* cadena, char* bloque, int semilla, int &guia){
+    for (int i = 0, j = 1; i < semilla; i++, j++){
+        if (j % 2 == 0){
+            if (bloque[i] == '1'){
+                cadena[++guia] = '0';
+            } else if (bloque[i] == '0') {
+                cadena[++guia] = '1';
+            }
+        } else {
+            cadena[++guia] = bloque[i];
+        }
+    }
+}
+
+int redondeo(int num1, int num2){
+    float resultado_dec, resultado, dec;
+    dec = 0.1;
+    resultado = num1/num2;
+    resultado_dec = resultado - int(resultado);
+    if (resultado_dec >= dec){
+        resultado = resultado+1;
+        resultado = int(resultado);
+    }
+    else{
+        resultado = int(resultado);
+    }
+    return resultado;
+}

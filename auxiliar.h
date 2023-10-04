@@ -12,9 +12,14 @@ string string_a_binario(string name);
 string decimal_a_binario(int decimal);
 int char_a_decimal(char letra);
 char bit_a_numero(int bit);
-void cadena_a_binario();
 int cantidad_de_caracteres(const char *cadena);
 char* decimal_a_binario_(int decimal);
 string leer_archivo(string nombre);
+int unos_y_ceros(char* bloque, int semilla, int &ceros);
+void generacion_de_bloque(char* bloque, int semilla, char* cadena, int &cont);
+void codificacion1_1(char* cadena, char* bloque, int semilla, int &guia);
+void codificacion1_2(char* cadena, char* bloque, int semilla, int &guia);
+void codificacion1_3(char* cadena, char* bloque, int semilla, int &guia);
+int redondeo(int num1, int num2);
 
 #endif // AUXILIAR_H
