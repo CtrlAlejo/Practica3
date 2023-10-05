@@ -4,10 +4,10 @@
 #include <iostream>
 using namespace std;
 
-char* cadena_a_binario(){
+char* cadena_a_binario(string file){
     char caracter, letra = '\0', *resultado; int decimal, cont = 0, cont2 = 0;
-    char *binario = new char[10];
-    ifstream archivo("prueba.txt");
+    char *binario = new char[10]; char* binario2 = new char[10];
+    ifstream archivo(file);
     while (archivo >> caracter){
         decimal = char_a_decimal(caracter);
         resultado = decimal_a_binario_(decimal);
@@ -23,7 +23,7 @@ char* cadena_a_binario(){
     return binario;
 }
 
-void metodo_codificacion_1 (char *sin_codificar, int semilla){
+char* metodo_codificacion_1 (char *sin_codificar, int semilla){
     char *bloque = new char[semilla]; char *codificado = new char[semilla]; int cont = 0, cont2 = 0, unos = 0, ceros = 0, cad_1 = 0, cont3 = 1;
     float tope;
     cad_1 = cantidad_de_caracteres(sin_codificar);
@@ -53,5 +53,21 @@ void metodo_codificacion_1 (char *sin_codificar, int semilla){
         tope = redondeo(cad_1, semilla);
     } while (cont3 != tope);
     delete[] bloque;
-    delete[] codificado;
+    return codificado;
+}
+
+void binario_a_cadena (char *codificado){
+    int cont = 0;char bloque[9]; unsigned long binario; char letra; string caracter;
+    while (codificado[cont] != '\0'){
+        for (int i = cont, j = 0; j < 8; i++, j++){
+            bloque[j] = codificado[i];
+            cont = i;
+        }
+        bloque[++cont] = '\0';
+        binario = conversion_de_char_a_int(bloque);
+        binario = binarioADecimal(binario);
+        letra = decimal_a_char(binario);
+        caracter = letra;
+        escritura_de_archivo("prueba2.dat", caracter);
+    }
 }

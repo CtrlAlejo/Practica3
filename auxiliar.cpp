@@ -10,8 +10,7 @@ void crear_archivo(string name){ //Crea un archivo
 }
 
 void escritura_de_archivo(string name, string info){ //Escribe informacion en un archivo
-    fstream file;
-    file.open(name,ios::out);
+    ofstream file(name, ios_base::app);
     file << info;
     file.close();
 }
@@ -20,6 +19,12 @@ int char_a_decimal(char letra){
     int decimal = 0;
     decimal = static_cast<int>(letra);
     return decimal;
+}
+
+char decimal_a_char(int decimal){
+    char caracter;
+    caracter = static_cast<char>(decimal);
+    return caracter;
 }
 
 char* decimal_a_binario_(int decimal){
@@ -170,4 +175,38 @@ int redondeo(int num1, int num2){
         resultado = int(resultado);
     }
     return resultado;
+}
+
+unsigned long conversion_de_char_a_int(const char *cadena){
+    //Recibe una cadena de caracteres numericos y la convierte a enteros
+    unsigned long numero = 0, i = 0;
+    if (cadena[0] == '-') {
+        i = 1;
+    }
+    while(cadena[i] != '\0'){
+        if(cadena[i] >= '0' && cadena[i] <= '9'){
+            numero = numero * 10 + (cadena[i] - '0');
+        }
+        else{
+            break;
+        }
+        i++;
+    }
+    return numero;
+}
+
+unsigned long binarioADecimal(long binario){
+    //Convierte un numero binario a decimal
+    //Argumentos --> binario: Es el numero binario que sera convertido a decimal
+    unsigned long decimal = 0;
+    int base = 1;  // Inicializar la base en 2^0 (1)
+
+    while (binario > 0) {
+        int digito = binario % 10;   // Obten el último dígito del número binario
+        decimal = decimal + digito * base;
+        binario = binario / 10;       // Elimina el último dígito del número binario
+        base = base * 2;             // Incrementa la base a la siguiente potencia de 2
+    }
+
+    return decimal;
 }
