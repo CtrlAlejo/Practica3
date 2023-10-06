@@ -21,8 +21,25 @@ void generacion_de_bloque(char* bloque, int semilla, char* cadena, int &cont);
 void codificacion1_1(char* cadena, char* bloque, int semilla, int &guia);
 void codificacion1_2(char* cadena, char* bloque, int semilla, int &guia);
 void codificacion1_3(char* cadena, char* bloque, int semilla, int &guia);
-int redondeo(int num1, int num2);
 unsigned long conversion_de_char_a_int(const char *cadena);
 unsigned long binarioADecimal(long binario);
+string codificar_bloque(const string& bloque);
+string codificar_archivo(const string& entrada, int n);
+char binario_a_char(const string& bloque);
+string binario_a_caracteres(const string& entrada);
+
+void segundo_metodo_codificacion();
+
+string decodificar_bloque(const string& bloque);
+string decodificar_archivo(const string& entrada, int n);
+
+void decodificar_segundo_metodo();
+string codificar_archivo(const string &binario, int n);
+string codificar_bloque(const string &bloque);
+char binario_a_char(const string& bloque);
+string binario_a_caracteres(const string& entrada);
+string decodificar_bloque(const string &bloque);
+string decodificar_archivo(const string &binario_codificado, int n);
+void decodificar_segundo_metodo();
 
 #endif // AUXILIAR_H

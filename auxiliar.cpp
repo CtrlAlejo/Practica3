@@ -17,7 +17,7 @@ void escritura_de_archivo(string name, string info){ //Escribe informacion en un
 
 int char_a_decimal(char letra){
     int decimal = 0;
-    decimal = static_cast<int>(letra);
+    decimal = static_cast<int>(static_cast<unsigned char>(letra));
     return decimal;
 }
 
@@ -27,8 +27,8 @@ char decimal_a_char(int decimal){
     return caracter;
 }
 
-char* decimal_a_binario_(int decimal){
-    char *resultado = new char[8], *resultado_f = new char[8]; int bit, cont = 0, cont2 = 0, cant;
+char* decimal_a_binario_(int decimal){ //Convierte un decimal a binario
+    char *resultado = new char[9], *resultado_f = new char[9]; int bit, cont = 0, cont2 = 0, cant;
     while (decimal > 0) {
         bit = decimal % 2;
         resultado[cont++] = bit_a_numero(bit);
@@ -41,10 +41,11 @@ char* decimal_a_binario_(int decimal){
     while (cont < (8 - cant)){
         resultado_f[cont++] = '0';
     }
-    for (int n = cont, m = 0; n <= cont2; n++, m++){ //Se voltea el arreglo de caracteres
+    for (int n = cont, m = 0; n < 8; n++, m++){ //Se voltea el arreglo de caracteres
         resultado_f[n] = resultado[(cont2 - 1) - m];
+        cont = n;
     }
-    resultado_f[++cant] = '\0';
+    resultado_f[++cont] = '\0';
     delete [] resultado;
     return resultado_f;
 }
@@ -72,7 +73,7 @@ string string_a_binario(string cadena){ //Convierte un string a binario
     return binario;
 }
 
-char bit_a_numero(int bit){
+char bit_a_numero(int bit){ //Selecciona los bits entre 0 y 1
     char bits[2] = {'0','1'}, caracter;
     {
         caracter = bits[bit];
@@ -105,7 +106,7 @@ string leer_archivo(string nombre){
     return contenido;
 }
 
-int unos_y_ceros(char* bloque, int semilla, int &ceros){
+int unos_y_ceros(char* bloque, int semilla, int &ceros){ //Cuenta los unos y ceros del bloque
     int unos = 0;
     for (int i = 0; i < semilla; i++){
         if (bloque[i] == '1'){
@@ -117,64 +118,65 @@ int unos_y_ceros(char* bloque, int semilla, int &ceros){
     return unos;
 }
 
-void generacion_de_bloque(char* bloque, int semilla, char* cadena, int &cont){
+void generacion_de_bloque(char* bloque, int semilla, char* cadena, int &cont){//Genera el bloque para codificar
     for (int i = 0; i < semilla; i++){
-        bloque[i] = cadena[cont++];
+        if (cadena[cont] != '\0'){
+            bloque[i] = cadena[cont++];
+        } else {
+            break;
+        }
     }
     bloque[cont] = '\0';
 }
 
 void codificacion1_1(char* cadena, char* bloque, int semilla, int &guia){
     for (int j = 0; j < semilla; j++){
-        if (bloque[j] == '0'){
-            cadena[++guia] = '1';
-        } else if (bloque[j] == '1') {
-            cadena[++guia] = '0';
+        if (cadena[guia] != '\0'){
+            if (bloque[j] == '0'){
+                cadena[++guia] = '1';
+            } else if (bloque[j] == '1') {
+                cadena[++guia] = '0';
+            }
+        } else {
+            break;
         }
     }
 }
 
 void codificacion1_2(char* cadena, char* bloque, int semilla, int &guia){
     for (int i = 0, j = 1; i < semilla; i++, j++){
-        if (j % 3 == 0){
-            if (bloque[i] == '1'){
-                cadena[++guia] = '0';
-            } else if (bloque[i] == '0') {
-                cadena[++guia] = '1';
+        if (cadena[guia] != '\0'){
+            if (j % 3 == 0){
+                if (bloque[i] == '1'){
+                    cadena[++guia] = '0';
+                } else if (bloque[i] == '0') {
+                    cadena[++guia] = '1';
+                }
+            } else {
+                cadena[++guia] = bloque[i];
             }
         } else {
-            cadena[++guia] = bloque[i];
+            break;
         }
     }
 }
 
 void codificacion1_3(char* cadena, char* bloque, int semilla, int &guia){
     for (int i = 0, j = 1; i < semilla; i++, j++){
-        if (j % 2 == 0){
-            if (bloque[i] == '1'){
-                cadena[++guia] = '0';
-            } else if (bloque[i] == '0') {
-                cadena[++guia] = '1';
+        if (bloque[i] != '\0'){
+            if (j % 2 == 0){
+                if (bloque[i] == '1'){
+                    cadena[++guia] = '0';
+                } else if (bloque[i] == '0') {
+                    cadena[++guia] = '1';
+                }
+            } else {
+                cadena[++guia] = bloque[i];
             }
         } else {
-            cadena[++guia] = bloque[i];
+            break;
         }
     }
-}
-
-int redondeo(int num1, int num2){
-    float resultado_dec, resultado, dec;
-    dec = 0.1;
-    resultado = num1/num2;
-    resultado_dec = resultado - int(resultado);
-    if (resultado_dec >= dec){
-        resultado = resultado+1;
-        resultado = int(resultado);
-    }
-    else{
-        resultado = int(resultado);
-    }
-    return resultado;
 }
 
 unsigned long conversion_de_char_a_int(const char *cadena){
@@ -207,6 +209,134 @@ unsigned long binarioADecimal(long binario){
         binario = binario / 10;       // Elimina el último dígito del número binario
         base = base * 2;             // Incrementa la base a la siguiente potencia de 2
     }
-
     return decimal;
+}
+
+string codificar_bloque(const string &bloque) { // Aplicar la codificación dentro del bloque
+    string bloque_codificado = bloque;
+    int longitud = bloque.length();
+    char bit; int indice_destino;
+
+
+    for (int i = 0; i < longitud; i++) {
+        bit = bloque[i];
+        indice_destino = (i + 1) % longitud; // Calcular la posición de destino
+        bloque_codificado[indice_destino] = bit;
+    }
+
+    return bloque_codificado;
+}
+
+// Función para dividir un archivo binario en bloques de n bits y aplicar la codificación
+string codificar_archivo(const string &binario, int n) {
+    string binario_codificado = ""; string bloqueCodificado; string bloque;
+    int longitud = binario.length();
+
+    for (int i = 0; i < longitud; i += n) {
+        bloque = "";
+        for (int j = i; j < i + n; j++) {
+            if (j < longitud) {
+                bloque += binario[j];
+            }
+        }
+        bloqueCodificado = codificar_bloque(bloque);
+        binario_codificado += bloqueCodificado;
+    }
+
+    return binario_codificado;
+}
+
+// Función para convertir un bloque de 8 bits en un carácter ASCII
+char binario_a_char(const string& bloque) {
+    int valor = 0; char caracter;
+    for (int i = 0; i < 8; i++) {
+        valor = (valor << 1) | (bloque[i] - '0'); // Convierte bits a valor entero
+    }
+    caracter = valor;
+    return caracter; // Convierte el valor a un carácter
+}
+
+// Función para dividir una cadena binaria codificada en bloques de 8 bits y convertirla en caracteres ASCII
+string binario_a_caracteres(const string& entrada) {
+    string caracteres = ""; string bloque;
+    int longitud = entrada.length();
+    char caracter;
+
+    // Dividir la cadena en bloques de 8 bits y convertirlos en caracteres
+    for (int i = 0; i < longitud; i += 8) {
+        bloque = "";
+        for (int j = i; j < i + 8; j++) {
+            if (j < longitud) {
+                bloque += entrada[j];
+            }
+        }
+        caracter = binario_a_char(bloque);
+        caracteres += caracter;
+    }
+
+    return caracteres;
+}
+
+void segundo_metodo_codificacion(){
+    string archivo_fuente; string archivo_salida; int n;
+    cout << "Ingrese el nombre del archivo fuente: ";
+    cin >> archivo_fuente;
+    cout << "Ingrese el nombre del archivo de salida: ";
+    cin >> archivo_salida;
+    cout << "Ingrese la semilla de codificacion: ";
+    cin >> n;
+    string file = leer_archivo(archivo_fuente);
+    string binario = string_a_binario(file);
+    string codificado = codificar_archivo(binario, n);
+    string caracteres = binario_a_caracteres(codificado);
+    escritura_de_archivo(archivo_salida, caracteres);
+}
+
+string decodificar_bloque(const string &bloque) {
+    string bloque_decodificado = bloque;
+    int longitud = bloque.length();
+    char bit;
+    int indice_destino;
+
+    for (int i = 0; i < longitud; i++) {
+        bit = bloque[i];
+        indice_destino = (i - 1 + longitud) % longitud; // Calcular la posición de destino
+        bloque_decodificado[indice_destino] = bit;
+    }
+
+    return bloque_decodificado;
+}
+// Función para dividir un archivo binario codificado en bloques de n bits y aplicar la decodificación
+string decodificar_archivo(const string &binario_codificado, int n) {
+    string binario_decodificado = "";
+    string bloque_decodificado;
+    string bloque;
+    int longitud = binario_codificado.length();
+
+    for (int i = 0; i < longitud; i += n) {
+        bloque = "";
+        for (int j = i; j < i + n && j < longitud; j++) {
+            bloque += binario_codificado[j];
+        }
+        bloque_decodificado = decodificar_bloque(bloque);
+        binario_decodificado += bloque_decodificado;
+    }
+
+    return binario_decodificado;
+}
+
+void decodificar_segundo_metodo(){
+    string archivo_fuente; string archivo_salida; int n;
+    cout << "Ingrese el nombre del archivo fuente: ";
+    cin >> archivo_fuente;
+    cout << "Ingrese el nombre del archivo de salida: ";
+    cin >> archivo_salida;
+    cout << "Ingrese la semilla de decodificacion: ";
+    cin >> n;
+    string file = leer_archivo(archivo_fuente);
+    string binario = string_a_binario(file);
+    string decodificado = decodificar_archivo(binario, n);
+    string caracteres = binario_a_caracteres(decodificado);
+    escritura_de_archivo(archivo_salida, caracteres);
+
 }
